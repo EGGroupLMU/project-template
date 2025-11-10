@@ -1,17 +1,25 @@
 #let template(
   title: none,
-  authors: (),
-  affiliations: (),
+  authors: (
+    name: "Author 1",
+    email: "author1@lmu.de",
+    orcid: none,
+    affiliation: [Economic Geography Group / Department of Geography / LMU Munich],
+    corresponding: false
+  ),
+  mark_corresponding: true,
   abstract: none,
   keywords: (),
+  JEL: none,
   references: "references.bib",
+  references_heading: "References",
   body
 ) = {
   set page(
     paper: "a4",
     columns: 2,
     numbering: "1",
-    margin: (x: 60pt, y: auto),
+    margin: (x: 60pt, y: auto)
   )
   set par(justify: true)
   set text(
@@ -23,9 +31,8 @@
   show heading.where(level: 2): set text(12pt, weight: "bold")
   show heading.where(body: [References]): set heading(numbering: none)
   
-  show figure.caption: set text(size: 10pt)
-  // show figure.caption: set align(left)
-
+  // show ref: set text(weight: "semibold")
+  
   let count = authors.len()
   let ncols = calc.min(count, 3)
   
@@ -42,14 +49,21 @@
         columns: (1fr,) * ncols,
         column-gutter: 1em,
         row-gutter: 24pt,
-        ..authors.map(author => text(11pt)[
-          *#author.name* \
+        ..authors.map(author => text(10pt)[
+          #text(12pt, weight: 800, [*#author.name*])
+          #if author.corresponding {super($dagger$)} \
           #author.affiliation \
           #link("mailto:" + author.email)
         ]),
       )
       
-      #v(1em)
+      #v(0.5em)
+      #if mark_corresponding {
+        align(left)[
+          #set text(size: 10pt, style: "italic")
+          #super($dagger$) corresponding author.
+        ]
+      }
     ],
   )
 
@@ -60,7 +74,18 @@
     #abstract
   ]
 
+  if JEL != none {
+    v(0.1em)
+    text(style: "italic")[JEL Codes: #JEL]
+  }
+  
+  if keywords != none {
+    v(0.1em)
+    text()[_Keywords:_ #keywords.join(", ")]
+  }
+  
   body
 
-  bibliography(references, title: "References", style: "egg.csl")
+  bibliography(references, title: references_heading, style: "egg.csl")
 }
+
