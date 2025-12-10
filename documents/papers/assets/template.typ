@@ -12,7 +12,7 @@
   keywords: (),
   JEL: none,
   references: "references.bib",
-  references_heading: "References",
+  include_references_section: true,
   body
 ) = {
   set page(
@@ -86,6 +86,7 @@
   
   body
 
-  bibliography(references, title: references_heading, style: "egg.csl")
+  if include_references_section {
+    bibliography(references, title: "References", style: "egg.csl")
+  }
 }
-
