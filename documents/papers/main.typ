@@ -1,40 +1,50 @@
-#import "assets/template.typ": template
+#import "assets/template-submission.typ": template
 
-#show: template.with(
-  title: [
-    // Put your title here
-  ],
-  
-  authors: (
+#let title = [
+    How to write a nice paper
+  ]
+
+#let authors = (
     (
       name: "Author 1",
       orcid: "",
       email: "author1@lmu.de",
-      affiliation: [Economic Geography Group \ Department of Geography \ LMU Munich]
+      affiliation: [Economic Geography Group \ Department of Geography \ LMU Munich],
+      corresponding: true,
     ),
     (
       name: "Author 2",
       orcid: "",
       email: "author2@lmu.de",
-      affiliation: [Economic Geography Group \ Department of Geography \ LMU Munich]
+      affiliation: [Economic Geography Group \ Department of Geography \ LMU Munich],
+      corresponding: false,
     ),
     (
       name: "Author 3",
       orcid: "",
       email: "author3@lmu.de",
-      affiliation: [Economic Geography Group \ Department of Geography \ LMU Munich]
+      affiliation: [Economic Geography Group \ Department of Geography \ LMU Munich],
+      corresponding: false,
     ),
-  ),
-  
-  keywords: ("keyword 1", "keyword 2", "keyword 3"),
+  )
 
-  references: "references.bib",
+#let keywords = ("keyword 1", "keyword 2", "keyword 3")
 
-  abstract: [
+#let abstract = [
     #lorem(150)
-  ],
-  
+]
+
+#show: template.with(
+  title: title,
+  authors: authors,
+  keywords: keywords,
+  abstract: abstract,
+  references: "references.bib",
 )
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+
 
 = Introduction <introduction>
 As demonstrated, institutions are the best thing since sliced bread @gluckler2023b @eckhardt2025. #lorem(500)

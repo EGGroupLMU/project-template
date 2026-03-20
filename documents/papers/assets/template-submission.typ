@@ -1,63 +1,62 @@
 #let template(
   title: none,
-  authors: (
-    name: "Author 1",
-    email: "author1@lmu.de",
-    orcid: none,
-    affiliation: [Economic Geography Group / Department of Geography / LMU Munich],
-    corresponding: false
-  ),
-  mark_corresponding: true,
+  authors: (),
   abstract: none,
   keywords: (),
   JEL: none,
   references: "references.bib",
-  include_references_section: true,
+  mark_corresponding: true,
   body
 ) = {
   set page(
     paper: "a4",
-    columns: 2,
+    columns: 1,
     numbering: "1",
-    margin: (x: 60pt, y: auto)
+    margin: (x: 1.2in, y: auto)
   )
   set par(justify: true)
   set text(
     font: "Libertinus Serif",
-    size: 11pt,
+    size: 12pt,
   )
 
   show heading.where(level: 1): set heading(numbering: "1")
-  show heading.where(level: 2): set text(12pt, weight: "bold")
+  show heading.where(level: 1): set text(16pt, weight: "bold")
+  show heading.where(level: 2): set text(14pt, weight: "bold")
+
   show heading.where(body: [References]): set heading(numbering: none)
+
+  show heading.where(level: 1): set block(below: 1em, above: 2em)
+  show heading.where(level: 2): set block(below: 1.2em, above: 1.5em)
   
   // show ref: set text(weight: "semibold")
   
+
   let count = authors.len()
   let ncols = calc.min(count, 3)
-  
+
   place(
     top + center,
     scope: "parent",
     float: true,
     text(17pt)[
       #title
-      
+
       #v(1em)
-      
+
       #grid(
         columns: (1fr,) * ncols,
-        column-gutter: 1em,
-        row-gutter: 24pt,
-        ..authors.map(author => text(10pt)[
+        column-gutter: 0.2em,
+        ..authors.map(author => text(11pt)[
           #text(12pt, weight: 800, [*#author.name*])
-          #if author.corresponding {super($dagger$)} \
+          #if (author.corresponding and mark_corresponding) {super($dagger$)} \
           #author.affiliation \
           #link("mailto:" + author.email)
         ]),
       )
-      
+
       #v(0.5em)
+
       #if mark_corresponding {
         align(left)[
           #set text(size: 10pt, style: "italic")
@@ -67,12 +66,19 @@
     ],
   )
 
+  v(4em)
+
   set align(left)
+
+  set par(leading: 1.2em, spacing: 2em)
+  // set block(below: 2em)
     
-  text(weight: "semibold")[
-    _Abstract._
+  text()[
+    *_Abstract._*
     #abstract
   ]
+
+  v(1em)
 
   if JEL != none {
     v(0.1em)
@@ -83,10 +89,10 @@
     v(0.1em)
     text()[_Keywords:_ #keywords.join(", ")]
   }
+
+  pagebreak()
   
   body
 
-  if include_references_section {
-    bibliography(references, title: "References", style: "egg.csl")
-  }
+  bibliography(references, title: "References", style: "egg.csl")
 }
