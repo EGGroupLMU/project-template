@@ -1,3 +1,5 @@
+#import "@preview/shadowed:0.3.0": shadow
+
 #let template(
   font: "Aptos Display",
   fontsize: 18pt,
@@ -9,18 +11,19 @@
     paper: "presentation-16-9",
     margin: 0em,
     numbering: "1",
-    number-align: left
+    number-align: left,
   )
 
   set text(
-    rgb("#3f3f3f"), fontsize,
+    rgb("#3f3f3f"),
+    fontsize,
     font: font,
-    stretch: 90%
+    stretch: 90%,
   )
 
   // set list(spacing: 1.3em)
   set par(leading: 0.5em)
-  
+
   let refcol = rgb("#8b8b8b")
 
   show cite.where(form: "normal"): set text(11pt, refcol)
@@ -62,7 +65,7 @@
     align: center,
     rowspan: 2,
     inset: (top: 1.5em, bottom: 1.5em, left: 1em, right: 1em),
-    content
+    content,
   )
 }
 
@@ -70,7 +73,7 @@
   grid.cell(
     fill: fill,
     inset: (top: 1.5em, bottom: 1.5em, left: 1em, right: 2em),
-    content
+    content,
   )
 }
 
@@ -83,7 +86,7 @@
       #set text(7pt)
       #context if pagerefs.get().len() > 0 {
         v(2em)
-        line(length:10%, stroke: black + 1pt)
+        line(length: 10%, stroke: black + 1pt)
 
         for (i, label) in pagerefs.get().enumerate() {
           if i > 0 {
@@ -95,12 +98,13 @@
         }
         pagerefs.update(x => ())
       }
-    ]
+    ],
   )
 }
 
 #let slide_template(
-  leftcontent, rightcontent,
+  leftcontent,
+  rightcontent,
   rightsize: 50%,
   citesize: 15%,
   leftcolor: rgb("#f3f3f3"),
@@ -111,17 +115,57 @@
       columns: (100% - rightsize, rightsize),
       rows: (100% - citesize, citesize),
       gutter: 0pt,
-      leftbox(fill: leftcolor)[#leftcontent],
-      rightbox(fill: rightcolor)[#rightcontent],
+      leftbox(fill: leftcolor)[#leftcontent], rightbox(fill: rightcolor)[#rightcontent],
       citebox(fill: rightcolor),
     )
 
     #context place(
-      dx: 98%, dy:-3.20%, [
-      #let col = luma(40%)
-      #set text(12pt, col, weight: "bold")
-      #let i = here().page()
-      #if(i) > 1 [#i]
-    ])
+      dx: 98%,
+      dy: -3.20%,
+      [
+        #let col = luma(40%)
+        #set text(12pt, col, weight: "bold")
+        #let i = here().page()
+        #if (i) > 1 [#i]
+      ],
+    )
   ]
 }
+
+#let shdw(x) = shadow(x, dx: 2pt, dy: 2pt, blur: 4pt, fill: rgb(10, 10, 10, 55%))
+
+#let lightgray = rgb("#f0f0f0")
+
+#let titleslide(title, sub, img, authors, leftcolor: lightgray, rightcolor: white) = {
+  let slide = slide_template.with(
+    leftcolor: leftcolor,
+    rightcolor: rightcolor,
+    rightsize: 89%,
+    citesize: 0%,
+  )
+  slide([], [
+    #set align(right)
+    #v(10%)
+    #text(22pt, weight: "bold", baseline: 10pt)[
+      #title
+    ]
+
+    #shdw(img)
+    #sub
+
+    #v(12%)
+
+    #set align(right + horizon)
+    #set text(12pt)
+
+    #let n_authors = authors.len()
+
+    #grid(
+      align: (..range(n_authors).map(_ => left), right), columns: n_authors + 1, column-gutter: 20pt,
+      ..authors, [
+        #image("logo.png", height: 12%)
+      ]
+    )
+  ])
+}
+
